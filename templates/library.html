@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Library — Hangar{% endblock %}
+{% block content %}
+<div class="lib">
+
+  <header class="lib-topbar">
+    <div class="wordmark">HANGAR<span class="dot">•</span></div>
+    <p class="lib-tag">Open shelf — browse and download, no account needed.</p>
+  </header>
+  <div class="lib-stripe"></div>
+
+  <div class="lib-body">
+    <aside class="lib-sidebar">
+      <div class="lib-sidebar-title">Shelves</div>
+      <ul id="shelfList" class="shelf-list">
+        <li class="shelf-item active" data-shelf="">All items <span class="shelf-count mono" id="allCount">0</span></li>
+      </ul>
+    </aside>
+
+    <main class="lib-main">
+      <input type="text" id="librarySearch" class="lib-search" placeholder="Search the library…">
+
+      <div id="catalog" class="catalog"></div>
+      <div id="libEmpty" class="empty-state" hidden>Nothing on the shelves yet.</div>
+    </main>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='library.js') }}"></script>
+{% endblock %}
