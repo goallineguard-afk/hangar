@@ -1,9 +1,15 @@
 # Hangar
 
-A private file dashboard, backed by Telegram's free storage. Upload from
-your browser, get a manifest of everything you've stored, download it back,
-or hand anyone a link that opens straight to a "Download" button — no
-Telegram account needed on their end.
+A file library backed by Telegram's free storage, with two separate sides:
+
+- **`/`** — the **public library**. Anyone can browse by shelf, search, and
+  download. No account, no login.
+- **`/admin`** — your **private dashboard**. Password-protected. Upload
+  files, sort them onto shelves (e.g. "Psychology", "Self-Help", "Notes"),
+  rename or remove them.
+
+Visitors can only ever read and download — there's no public upload, so you
+stay in control of what's on the shelves.
 
 **How it's free:** Telegram lets a bot send files into a chat or channel at
 no cost and keeps them indefinitely. Hangar uses that as the storage layer —
@@ -50,7 +56,8 @@ SECRET_KEY=any-long-random-string
 export $(cat .env | xargs)   # or use python-dotenv / your host's env settings
 python app.py
 ```
-Open `http://localhost:5000`, sign in with your `APP_PASSWORD`.
+- Public library: `http://localhost:5000/`
+- Your dashboard: `http://localhost:5000/admin` — sign in with `APP_PASSWORD`
 
 ## Getting a real public link (so share links work for other people)
 
@@ -80,16 +87,26 @@ This prints a temporary public URL that forwards to your local app.
 
 ## Using it
 
+### Your dashboard (`/admin`)
 - **Upload:** drag a file onto the dock, or click it to browse.
+- **Shelve under:** type a category (e.g. "Psychology", "Self-Help",
+  "Notes") into the field below the dock before uploading — it becomes a
+  shelf visitors can browse by on the public side. It's just a label, not a
+  real folder, and autocompletes from shelves you've already used.
 - **Manifest:** every file shows its type, size, and when it was logged.
-- **Get:** downloads straight to your own device.
-- **Share:** copies a link — anyone who opens it sees the filename and a
-  Download button, no login required.
+- **Get / Share:** download it yourself, or copy a direct link to hand to
+  one specific person.
 - **Rename / Delete:** delete also removes the underlying message from your
   Telegram storage chat, freeing it from the index.
-- **Search / folder filter:** the toolbar above the manifest narrows the
-  list; folders are just a text label you set per-upload, not real
-  directories.
+- **View public library ↗:** opens the public side in a new tab so you can
+  see what visitors see.
+
+### The public library (`/`)
+- No login. Visitors pick a shelf on the left, or search across everything.
+- Each item shows its shelf, size, and a Download button — that's the only
+  action they have. They can't upload, rename, or delete anything.
+- Share this root URL (e.g. `https://yourname.onrender.com`) with anyone —
+  that's the whole library, ready to browse.
 
 ## Files in this project
 ```
