@@ -75,7 +75,7 @@ def login():
     if request.method == "POST":
         if secrets.compare_digest(request.form.get("password", ""), APP_PASSWORD):
             session["authed"] = True
-            return redirect(request.args.get("next") or url_for("index"))
+            return redirect(request.args.get("next") or url_for("admin"))
         error = "Wrong password."
     return render_template("login.html", error=error)
 
@@ -87,12 +87,20 @@ def logout():
 
 
 # ---------------------------------------------------------------------------
-# Dashboard
+# Admin dashboard — private, upload & manage (was the old "/")
+# ---------------------------------------------------------------------------
+@app.route("/admin")
+@login_required
+def admin():
+    return render_template("index.html", max_mb=MAX_UPLOAD_MB)
+
+
+# ---------------------------------------------------------------------------
+# Public library — anyone can browse and download, no login
 # ---------------------------------------------------------------------------
 @app.route("/")
-@login_required
-def index():
-    return render_template("index.html", max_mb=MAX_UPLOAD_MB)
+def library():
+    return render_template("library.html")
 
 
 def category_for(mime):
@@ -153,6 +161,51 @@ def api_files():
         "count": len(files),
         "total_size": total_size,
     })
+
+
+@app.route("/api/library/files")
+def api_library_files():
+    """Public, read-only catalog — no auth, no internal Telegram fields exposed."""
+    folder = request.args.get("folder")
+    q = request.args.get("q", "").strip()
+    with db() as conn:
+        if q:
+            rows = conn.execute(
+                "SELECT * FROM files WHERE original_name LIKE ? ORDER BY original_name ASC",
+                (f"%{q}%",),
+            ).fetchall()
+        elif folder:
+            rows = conn.execute(
+                "SELECT * FROM files WHERE folder=? ORDER BY original_name ASC", (folder,)
+            ).fetchall()
+        else:
+            rows = conn.execute("SELECT * FROM files ORDER BY original_name ASC").fetchall()
+
+        shelf_rows = conn.execute(
+            "SELECT folder, COUNT(*) c FROM files GROUP BY folder ORDER BY folder"
+        ).fetchall()
+
+    files = [{
+        "id": r["id"],
+        "name": r["original_name"],
+        "size": r["size"],
+        "category": category_for(r["mime"]),
+        "folder": r["folder"],
+        "uploaded_at": r["uploaded_at"],
+    } for r in rows]
+
+    shelves = [{"name": s["folder"], "count": s["c"]} for s in shelf_rows]
+
+    return jsonify({"files": files, "shelves": shelves, "count": len(files)})
+
+
+@app.route("/library/download/<file_id>")
+def library_download(file_id):
+    with db() as conn:
+        row = conn.execute("SELECT * FROM files WHERE id=?", (file_id,)).fetchone()
+    if not row:
+        abort(404)
+    return _stream_from_telegram(row["tg_file_id"], row["original_name"])
 
 
 @app.route("/api/upload", methods=["POST"])
