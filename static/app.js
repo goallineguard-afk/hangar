@@ -9,6 +9,8 @@ const progressWrap = document.getElementById('dockProgress');
 const progressBar = document.getElementById('dockProgressBar');
 const progressLabel = document.getElementById('dockProgressLabel');
 const toast = document.getElementById('toast');
+const shelfInput = document.getElementById('shelfInput');
+const shelfOptions = document.getElementById('shelfOptions');
 
 let lastUploadedId = null;
 
@@ -50,6 +52,9 @@ async function loadFiles() {
   folderFilterEl.innerHTML = '<option value="">All folders</option>' +
     data.folders.map(f => `<option value="${f}">${f}</option>`).join('');
   folderFilterEl.value = current;
+
+  // keep the "shelve under" autocomplete list in sync too
+  shelfOptions.innerHTML = data.folders.map(f => `<option value="${f}">`).join('');
 
   manifestBody.innerHTML = '';
   emptyState.hidden = data.files.length > 0;
@@ -129,7 +134,7 @@ function uploadOne(file) {
     const xhr = new XMLHttpRequest();
     const form = new FormData();
     form.append('file', file);
-    form.append('folder', folderFilterEl.value || '/');
+    form.append('folder', (shelfInput.value || '/').trim() || '/');
 
     progressWrap.hidden = false;
     progressLabel.textContent = `Sending ${file.name}…`;
