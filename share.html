@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{% if found %}{{ name }} — Hangar{% else %}Not found — Hangar{% endif %}{% endblock %}
+{% block bodyclass %}gate{% endblock %}
+{% block content %}
+<div class="gate-wrap">
+  {% if found %}
+  <div class="gate-card share-card">
+    <div class="share-tag mono">{{ category|upper }}</div>
+    <h1 class="share-name">{{ name }}</h1>
+    <p class="share-size mono">{{ "%.1f"|format(size / 1024 / 1024) if size and size > 1048576 else ((size / 1024)|round(1) if size else 0) }}{{ "MB" if size and size > 1048576 else "KB" }}</p>
+    <a class="download-btn" href="{{ url_for('share_download', token=token) }}">Download file</a>
+    <p class="share-foot">Sent via Hangar</p>
+  </div>
+  {% else %}
+  <div class="gate-card">
+    <div class="gate-mark">HANGAR</div>
+    <p class="gate-sub">This link doesn't lead anywhere. The file may have been removed.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

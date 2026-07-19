@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Hangar{% endblock %}
+{% block content %}
+<div class="app">
+
+  <header class="topbar">
+    <div class="wordmark">HANGAR<span class="dot">•</span></div>
+    <div class="stats mono" id="stats">0 items logged &middot; 0 B stored</div>
+    <a class="logout" href="{{ url_for('logout') }}">Sign out</a>
+  </header>
+
+  <section class="dock" id="dock">
+    <div class="dock-stripe"></div>
+    <div class="dock-inner">
+      <div class="dock-icon">▣</div>
+      <div class="dock-text">
+        <strong>Drop cargo here</strong>
+        <span>or click to choose a file &middot; up to {{ max_mb }}MB each</span>
+      </div>
+      <input type="file" id="fileInput" hidden multiple>
+    </div>
+    <div class="dock-progress" id="dockProgress" hidden>
+      <div class="dock-progress-bar" id="dockProgressBar"></div>
+      <span id="dockProgressLabel" class="mono"></span>
+    </div>
+  </section>
+
+  <section class="toolbar">
+    <input type="text" id="search" placeholder="Search the manifest…">
+    <select id="folderFilter">
+      <option value="">All folders</option>
+    </select>
+  </section>
+
+  <section class="manifest-wrap">
+    <div class="manifest-head mono">
+      <span class="col-id">ID</span>
+      <span class="col-name">NAME</span>
+      <span class="col-tag">TYPE</span>
+      <span class="col-size">SIZE</span>
+      <span class="col-date">LOGGED</span>
+      <span class="col-actions">ACTIONS</span>
+    </div>
+    <div id="manifestBody"></div>
+    <div id="emptyState" class="empty-state" hidden>
+      No cargo logged yet. Drop something on the dock above.
+    </div>
+  </section>
+
+  <div id="toast" class="toast" hidden></div>
+</div>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+{% endblock %}
