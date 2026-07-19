@@ -129,6 +129,8 @@ body.gate {
 }
 .wordmark .dot { color: var(--amber); }
 .stats { color: var(--ash); font-size: 12.5px; flex: 1; }
+.view-library { color: var(--teal); font-size: 13px; text-decoration: none; margin-right: 18px; }
+.view-library:hover { text-decoration: underline; }
 .logout { color: var(--ash); font-size: 13px; text-decoration: none; }
 .logout:hover { color: var(--paper); }
 
@@ -157,6 +159,30 @@ body.gate {
 .dock-icon { font-size: 26px; color: var(--amber); }
 .dock-text strong { display: block; font-size: 16px; margin-bottom: 4px; }
 .dock-text span { color: var(--ash); font-size: 13px; }
+.dock-shelf-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 28px 22px;
+  cursor: default;
+}
+.dock-shelf-row label {
+  font-size: 12px;
+  color: var(--ash);
+  white-space: nowrap;
+}
+.dock-shelf-row input {
+  flex: 1;
+  max-width: 320px;
+  background: var(--graphite);
+  border: 1px solid var(--steel-line);
+  color: var(--paper);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+}
+.dock-shelf-row input:focus { outline: none; border-color: var(--amber); }
 .dock-progress { padding: 0 28px 20px; }
 .dock-progress-bar { height: 4px; background: var(--amber); border-radius: 2px; width: 0%; transition: width .2s ease; }
 #dockProgressLabel { color: var(--ash); font-size: 11.5px; display: block; margin-top: 6px; }
@@ -262,6 +288,102 @@ body.gate {
   .col-name { grid-area: name; font-weight: 600; }
   .col-tag, .col-size, .col-date { display: inline-block; margin-right: 10px; }
   .col-actions { grid-area: actions; margin-top: 8px; }
+}
+
+/* ---------- Public library ---------- */
+.lib { max-width: 1080px; margin: 0 auto; padding: 0 24px 80px; }
+.lib-topbar { padding: 32px 0 18px; }
+.lib-tag { color: var(--ash); font-size: 14px; margin: 8px 0 0; }
+.lib-stripe {
+  height: 4px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(135deg, var(--amber), var(--amber) 10px, var(--steel) 10px, var(--steel) 20px);
+  opacity: 0.75;
+  margin-bottom: 26px;
+}
+
+.lib-body { display: grid; grid-template-columns: 220px 1fr; gap: 32px; align-items: start; }
+
+.lib-sidebar-title {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ash);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.shelf-list { list-style: none; margin: 0; padding: 0; }
+.shelf-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  color: var(--paper);
+  cursor: pointer;
+  margin-bottom: 2px;
+}
+.shelf-item:hover { background: var(--steel); }
+.shelf-item.active { background: var(--steel); color: var(--amber); }
+.shelf-count { color: var(--ash); font-size: 11.5px; }
+.shelf-item.active .shelf-count { color: var(--amber); }
+
+.lib-search {
+  width: 100%;
+  background: var(--steel);
+  border: 1px solid var(--steel-line);
+  color: var(--paper);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 22px;
+}
+.lib-search:focus { outline: none; border-color: var(--teal); }
+
+.catalog {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+.catalog-card {
+  background: var(--steel);
+  border: 1px solid var(--steel-line);
+  border-radius: var(--radius);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.catalog-tag {
+  font-size: 10.5px;
+  color: var(--teal);
+  border: 1px solid var(--teal);
+  border-radius: 4px;
+  padding: 2px 6px;
+  width: fit-content;
+  text-transform: uppercase;
+}
+.catalog-name { font-weight: 600; font-size: 14.5px; word-break: break-word; }
+.catalog-meta { color: var(--ash); font-size: 11.5px; }
+.catalog-download {
+  margin-top: 6px;
+  text-align: center;
+  background: var(--amber);
+  color: #1B1F23;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 9px;
+  border-radius: 6px;
+}
+.catalog-download:hover { filter: brightness(1.08); }
+
+@media (max-width: 720px) {
+  .lib-body { grid-template-columns: 1fr; }
+  .lib-sidebar { order: 2; }
+  .shelf-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .shelf-item { margin-bottom: 0; }
 }
 
 :focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
